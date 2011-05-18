@@ -38,4 +38,10 @@ Digest::MurmurHash3 - MurmurHash3 Implementation For Perl
 
     my $hash = mumur32( $data_to_hash );
 
+    # Create four 8 bit pieces
+    my ($v1, $v2, $v3, $v4) = murmur128_x86( $data_to_hash );
+
+    # Create two 64 bit pieces
+    my ($v1, $v2) = murmur128_x64( $data_to_hash );
+
 =cut
