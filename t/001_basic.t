@@ -10,21 +10,21 @@ BEGIN {
 no warnings 'portable'; # silence 64bit+ integer warnings
 
 my @data = (
-    [ "Hello",  0x735907e6,
+    [ "Hello",  0x12da77c8,
         [ 0x2360ae46, 0x5e6336c6, 0xad45b3f4, 0xad45b3f4 ],
         [ HAVE_64BITINT ?
             ( 0x35b974ff55d4c41c, 0xa000eacf29125544 ) :
             ()
         ],
     ],
-    [ "Hello1", 0x1cd371e4,
+    [ "Hello1", 0x6357e0a6,
         [ 0x8eb0cf41, 0x641b2401, 0xbc4c0dfc, 0xbc4c0dfc ],
         [ HAVE_64BITINT ?
             ( 0xafaafd85a8c00a56, 0xdc0dbef0c7059c1e ) :
             ()
         ]
     ],
-    [ "Hello2", 0x79e768aa,
+    [ "Hello2", 0xe5ce223e,
         [ 0xd3bcfc45, 0x66782162, 0x4beab2d1, 0x4beab2d1 ],
         [ HAVE_64BITINT ?
             ( 0x749556211f5f36ec, 0xfec442066e8ecb20 ) :
@@ -38,7 +38,7 @@ foreach my $data ( @data ) {
     { # 32 bit
         my $value = murmur32( $data->[0] );
         is $value, $data->[1],
-            "Hash for input for '$data->[0]' was $data->[1] ($value)"
+            "Hash (32 bit) for input for '$data->[0]' was $data->[1] ($value)"
     }
 
     { # 128 bit
