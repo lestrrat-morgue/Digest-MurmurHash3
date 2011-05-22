@@ -9,11 +9,14 @@ BEGIN {
     XSLoader::load __PACKAGE__, $VERSION;
 }
 
-our @EXPORT_OK = qw( murmur32 murmur128_x86 murmur128_x64 );
+our @EXPORT_OK = qw( murmur32 mumur128 murmur128_x86 murmur128_x64 );
 if ( ! HAVE_64BITINT ) {
     *murmur128_x64 = sub {
         Carp::croak( "64bit integers are not supported on your perl" );
     };
+    *murmur128 = \&murmur128_x64;
+} else {
+    *murmur128 = \&murmur128_x86;
 }
 
 1;
@@ -36,12 +39,12 @@ Digest::MurmurHash3 - MurmurHash3 Implementation For Perl
     use Digest::MurmurHash3 qw( murmur128_x64 );
     use Digest::MurmurHash3 qw( murmur128_x86 );
 
-    my $hash = mumur32( $data_to_hash );
+    my $hash = murmur32( $data_to_hash );
 
     # Create four 8 bit pieces
     my ($v1, $v2, $v3, $v4) = murmur128_x86( $data_to_hash );
 
-    # Create two 64 bit pieces
+    # Create two 64 bit pieces (your perl must be built to use 64bit ints)
     my ($v1, $v2) = murmur128_x64( $data_to_hash );
 
 =cut
