@@ -54,13 +54,13 @@ inline uint64_t rotl64 ( uint64_t x, int8_t r )
 // Block read - if your platform needs to do endian-swapping or can only
 // handle aligned reads, do the conversion here
 
-FORCE_INLINE uint32_t getblock ( const uint32_t * p, int i )
+FORCE_INLINE uint32_t getblock32 ( const uint32_t * p, int i )
 {
   return p[i];
 }
 
 #ifdef HAVE_64BITINT
-FORCE_INLINE uint64_t getblock ( const uint64_t * p, int i )
+FORCE_INLINE uint64_t getblock64 ( const uint64_t * p, int i )
 {
   return p[i];
 }
@@ -69,7 +69,7 @@ FORCE_INLINE uint64_t getblock ( const uint64_t * p, int i )
 //-----------------------------------------------------------------------------
 // Finalization mix - force all bits of a hash block to avalanche
 
-FORCE_INLINE uint32_t fmix ( uint32_t h )
+FORCE_INLINE uint32_t fmix32 ( uint32_t h )
 {
   h ^= h >> 16;
   h *= 0x85ebca6b;
@@ -83,7 +83,7 @@ FORCE_INLINE uint32_t fmix ( uint32_t h )
 //----------
 
 #ifdef HAVE_64BITINT
-FORCE_INLINE uint64_t fmix ( uint64_t k )
+FORCE_INLINE uint64_t fmix64 ( uint64_t k )
 {
   k ^= k >> 33;
   k *= BIG_CONSTANT(0xff51afd7ed558ccd);
@@ -115,7 +115,7 @@ void MurmurHash3_x86_32 ( const void * key, int len,
 
   for(int i = -nblocks; i; i++)
   {
-    uint32_t k1 = getblock(blocks,i);
+    uint32_t k1 = getblock32(blocks,i);
 
     k1 *= c1;
     k1 = ROTL32(k1,15);
@@ -146,7 +146,7 @@ void MurmurHash3_x86_32 ( const void * key, int len,
 
   h1 ^= len;
 
-  h1 = fmix(h1);
+  h1 = fmix32(h1);
 
   *(uint32_t*)out = h1;
 } 
@@ -176,10 +176,10 @@ void MurmurHash3_x86_128 ( const void * key, const int len,
 
   for(int i = -nblocks; i; i++)
   {
-    uint32_t k1 = getblock(blocks,i*4+0);
-    uint32_t k2 = getblock(blocks,i*4+1);
-    uint32_t k3 = getblock(blocks,i*4+2);
-    uint32_t k4 = getblock(blocks,i*4+3);
+    uint32_t k1 = getblock32(blocks,i*4+0);
+    uint32_t k2 = getblock32(blocks,i*4+1);
+    uint32_t k3 = getblock32(blocks,i*4+2);
+    uint32_t k4 = getblock32(blocks,i*4+3);
 
     k1 *= c1; k1  = ROTL32(k1,15); k1 *= c2; h1 ^= k1;
 
@@ -242,10 +242,10 @@ void MurmurHash3_x86_128 ( const void * key, const int len,
   h1 += h2; h1 += h3; h1 += h4;
   h2 += h1; h3 += h1; h4 += h1;
 
-  h1 = fmix(h1);
-  h2 = fmix(h2);
-  h3 = fmix(h3);
-  h4 = fmix(h4);
+  h1 = fmix32(h1);
+  h2 = fmix32(h2);
+  h3 = fmix32(h3);
+  h4 = fmix32(h4);
 
   h1 += h2; h1 += h3; h1 += h4;
   h2 += h1; h3 += h1; h4 += h1;
@@ -278,8 +278,8 @@ void MurmurHash3_x64_128 ( const void * key, const int len,
 
   for(int i = 0; i < nblocks; i++)
   {
-    uint64_t k1 = getblock(blocks,i*2+0);
-    uint64_t k2 = getblock(blocks,i*2+1);
+    uint64_t k1 = getblock64(blocks,i*2+0);
+    uint64_t k2 = getblock64(blocks,i*2+1);
 
     k1 *= c1; k1  = ROTL64(k1,31); k1 *= c2; h1 ^= k1;
 
@@ -328,8 +328,8 @@ void MurmurHash3_x64_128 ( const void * key, const int len,
   h1 += h2;
   h2 += h1;
 
-  h1 = fmix(h1);
-  h2 = fmix(h2);
+  h1 = fmix64(h1);
+  h2 = fmix64(h2);
 
   h1 += h2;
   h2 += h1;
